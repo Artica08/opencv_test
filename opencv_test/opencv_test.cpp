@@ -241,7 +241,7 @@ int main()
 		Vmin = 180;		// Media valore threshold
 
 		// Lettura immagine
-	    Mat image = imread("C:\\Users\\ArticaWareD\\Downloads\\Semafori\\image.jpg", IMREAD_COLOR);
+	    Mat image = imread("C:\\Users\\ArticaWareD\\Downloads\\Semafori\\semaforo.jpg", IMREAD_COLOR);
 	
 	    // Controllo
 	    if (image.empty())
@@ -339,7 +339,7 @@ int main()
 					else
 						light_color = cv::Scalar(0, 0, 255);
 
-					cv::drawContours(processed_frame, objects, k, light_color, 4, cv::LINE_AA);
+					cv::drawContours(processed_frame, objects, k, cv::Scalar(0, 255, 255) , 4, cv::LINE_AA);
 
 
 					cv::Rect bbox = cv::boundingRect(objects[k]);
