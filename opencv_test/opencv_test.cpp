@@ -234,14 +234,14 @@ int main()
 	try
 	{
 		// Set dei parametri
-		Amin = 100;		// Area threshold
+		Amin = 60;		// Area threshold
 		Amax = 2000;	// Massima area threshold
-		Cmin = 0.65;	// Circolarità threshold
-		Smin = 120;		// Media saturazione threshold
-		Vmin = 180;		// Media valore threshold
+		Cmin = 0.78;	// Circolarità threshold
+		Smin = 20;		// Media saturazione threshold
+		Vmin = 220;		// Media valore threshold
 
 		// Lettura immagine
-	    Mat image = imread("C:\\Users\\ArticaWareD\\Downloads\\Semafori\\semaforo.jpg", IMREAD_COLOR);
+	    Mat image = imread("C:\\Users\\ArticaWareD\\Desktop\\Progetti\\Scuola\\VB\\vs\\opencv_test\\opencv_test\\Resource\\semafori belli\\9.png", IMREAD_COLOR);
 	
 	    // Controllo
 	    if (image.empty())
@@ -255,6 +255,12 @@ int main()
 		imshow("Originale", image);
 		waitKey(0);
 
+		//Mat contrast;
+		//image.convertTo(contrast, -1, 1, 2);//changing contrast//
+		//// Originale
+		//imshow("Contrasto", contrast);
+		//waitKey(0);
+
 		// Converto l'immagine a colori nello spazio dei colori HSV
 		cv::Mat frame_HSV;
 		cv::cvtColor(image, frame_HSV, cv::COLOR_BGR2HSV);
@@ -262,8 +268,8 @@ int main()
 		cv::split(frame_HSV, hsv);
 
 		// Visualizzo HSV
-		imshow("HSV", frame_HSV);
-		waitKey(0);
+		//imshow("HSV", frame_HSV);
+		//waitKey(0);
 
 		// Binarizzo l'immagine
 		cv::Mat frame_bin;
@@ -271,18 +277,18 @@ int main()
 
 		// Visualizzo immagine binarizzata
 		imshow("Binarize", frame_bin);
-		waitKey(0);
+		//waitKey(0);
 
 		// Operazione morfologica di tipo Open
 		cv::morphologyEx(frame_bin, frame_bin, cv::MORPH_OPEN, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7)));
 
 		// Visualizzo l'operazione morfologica
 		imshow("Morphology", frame_bin);
-		waitKey(0);
+		//waitKey(0);
 
 		// Estraggo le componenti connesse (trovo gli oggetti)
 		std::vector < std::vector <cv::Point> > objects;
-		cv::findContours(frame_bin, objects, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
+		cv::findContours(frame_bin, objects, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
 		// Disegno gli oggetti trovati su uno sfondo vuoto
 		vector<Vec4i> hierarchy;
@@ -292,6 +298,8 @@ int main()
 		{
 			Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
 			drawContours(drawing, objects, (int)i, color, 2, LINE_8, hierarchy, 0);
+			/*putText(drawing,
+				"objects[i]", cv::Point(1, 1), 10, 10, cv::Scalar(255,255,255));*/
 		}
 		
 		// Visualizzo i contorni trovati
@@ -339,10 +347,10 @@ int main()
 					else
 						light_color = cv::Scalar(0, 0, 255);
 
-					cv::drawContours(processed_frame, objects, k, cv::Scalar(0, 255, 255) , 4, cv::LINE_AA);
-
-
+					cv::drawContours(processed_frame, objects, k, cv::Scalar(255, 0, 0) , 4, cv::LINE_AA);
+					
 					cv::Rect bbox = cv::boundingRect(objects[k]);
+					putText(processed_frame, to_string(detected_lights), cv::Point(bbox.x, bbox.y), 3, 2, cv::Scalar(255, 0, 255), 3);
 				}
 			}
 		}	
